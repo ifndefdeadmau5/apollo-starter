@@ -1,8 +1,25 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import gql from "graphql-tag";
+import { useQuery } from "@apollo/react-hooks";
+import logo from "./logo.svg";
+import "./App.css";
+
+const SOME_QUERY = gql`
+  query {
+    isConnected @client
+    savedList @client
+  }
+`;
 
 function App() {
+  const { loading, data } = useQuery(SOME_QUERY);
+
+  if (loading) return <span>loading...</span>;
+  if (!data) return <span>error!</span>;
+
+  console.log("data");
+  console.log(data);
+
   return (
     <div className="App">
       <header className="App-header">
@@ -10,14 +27,7 @@ function App() {
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <span>isConnected : {data && data.isConnected ? "true" : "false"}</span>
       </header>
     </div>
   );
